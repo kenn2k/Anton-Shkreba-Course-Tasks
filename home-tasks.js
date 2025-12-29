@@ -84,3 +84,215 @@
 // console.log(Object.keys(obj));
 // console.log(Object.values(obj));
 // console.log(Object.hasOwn(obj, "key"));
+
+//? ===================================================================================================================
+//? HOME TASK 2
+//? ===================================================================================================================
+
+//! Створити функцію, яка при створенні приймає об'єкт, наприклад: {access-token: 'qwerty'} і додає його до кожної структури даних, що буде передана в результатуючу функцію.
+//! Також до об'єкта буде додано поле count. При кожному виклику воно має збільшуватися на 1.
+
+// const addParamsToRequest = (params) => {
+//   let count = 0;
+//   return function (data) {
+//     const result = Object.assign({}, params, data, { count: count });
+//     count++;
+//     return result;
+//   };
+// };
+
+// const sendData = addParamsToRequest({ "access-token": "qwerty" });
+
+// console.log(sendData({ data: "some user 1" }));
+// console.log(sendData({ data: "some user 2" }));
+// console.log(sendData({ data: "some user 3" }));
+
+//! У вас є об'єкт:
+//! Викличте його так, щоб ім'я та вік були вказані (значення неважливі). Потім створіть функцію, яка буде це робити постійно при її виклику.
+
+// const obj = {
+//   name: "Anton",
+//   age: 20,
+//   getData: function () {
+//     console.log(`Person name is: ${this.name} and age ${this.age}`);
+//   },
+// };
+
+// function assignCharacteristic(object) {
+//   return obj.getData.call(object);
+// }
+
+// console.log(assignCharacteristic({ name: "Alex", age: 21 }));
+// console.log(assignCharacteristic({ name: "Andrew", age: 23 }));
+// console.log(assignCharacteristic({ name: "Soffi", age: 17 }));
+// console.log(obj.getData());
+
+//! Задача — пройтися по об'єкту рекурсивно, знайти всі файли та повернути їхні імена у вигляді масиву.
+
+// const root = {
+//   name: "name",
+
+//   type: "folder",
+
+//   children: [
+//     {
+//       name: "folder 1",
+
+//       type: "folder",
+
+//       children: [
+//         {
+//           name: "folder 2",
+
+//           type: "folder",
+
+//           children: [
+//             {
+//               name: "file 3",
+
+//               type: "file",
+
+//               size: 30,
+//             },
+//           ],
+//         },
+//       ],
+//     },
+
+//     {
+//       name: "file 1",
+
+//       type: "file",
+
+//       size: 10,
+//     },
+
+//     {
+//       name: "file 2",
+
+//       type: "file",
+
+//       size: 20,
+//     },
+//   ],
+// };
+
+// let arrayOfNames = [];
+
+// const getFilesName = (obj) => {
+//   if (obj.type === "file") {
+//     arrayOfNames.push(obj.name);
+//     return;
+//   }
+
+//   if (obj.type === "folder") {
+//     obj.children.forEach((char) => {
+//       getFilesName(char);
+//     });
+//   }
+// };
+
+// getFilesName(root);
+// console.log("array of names", arrayOfNames);
+
+/* 
+! Створіть базовий об'єкт Людина з такими властивостями: name, phone
+! Метод introduce, який виводить у консоль фразу: Привіт, мене звати {name}, мій номер {phone}.
+! Створіть об'єкти Студент і Викладач, які будуть наслідувати властивості та методи від об'єкта Людина.
+! Для Студента додайте додаткову властивість course (курс) і метод study, який виводить: Я навчаюся на {course} курсі.
+! Для Викладача додайте додаткову властивість subject (предмет) і метод teach, який виводить: Я викладаю {subject}.
+! Реалізуйте наслідування за допомогою конструктора функції або класів (оберіть один підхід).
+*/
+
+//? ES5 -------------------------------------------------------------------------------------
+// function Person(name, phone) {
+//   this.name = name;
+//   this.phone = phone;
+//   this.introduce = function () {
+//     console.log(`Привіт, мене звати ${this.name}, мій номер ${this.phone}`);
+//   };
+// }
+
+// let person = new Person("Anton", 123213213);
+
+//? --------
+
+// function Student(course, name, phone) {
+//   Person.call(this, name, phone);
+//   this.course = course;
+//   this.study = function () {
+//     console.log(`Я навчаюся на ${this.course} курсі.`);
+//   };
+// }
+
+// Student.prototype = Object.create(Person.prototype);
+// Student.prototype.constructor = Student;
+
+// let student = new Student(3, "Андрій", 31254543);
+// student.introduce();
+// student.study();
+
+//? --------
+
+// function Teacher(subject, name, phone) {
+//   Person.call(this, name, phone);
+//   this.subject = subject;
+//   this.teach = function () {
+//     console.log(`Я викладаю предмет ${this.subject}`);
+//   };
+// }
+
+// Teacher.prototype = Object.create(Person.prototype);
+// Teacher.prototype.constructor = Teacher;
+
+// let teacher = new Teacher("Математика", "Михайло", 4543543543);
+// teacher.introduce();
+// teacher.teach();
+
+//? ES6 -------------------------------------------------------------------------------------
+
+// class Person {
+//   constructor(name, phone) {
+//     this.name = name;
+//     this.phone = phone;
+//     this.introduce = function () {
+//       console.log(`Привіт, мене звати ${this.name}, мій номер ${this.phone}`);
+//     };
+//   }
+// }
+
+// const person = new Person("Anton", 123214214);
+
+// //? --------
+
+// class Student extends Person {
+//   constructor(name, phone, course) {
+//     super(name, phone);
+//     this.course = course;
+//     this.study = function () {
+//       console.log(`Я навчаюся на ${this.course} курсі.`);
+//     };
+//   }
+// }
+
+// const student = new Student("Anton", 123214214, 3);
+
+// student.introduce();
+// student.study();
+
+// //? --------
+
+// class Teacher extends Person {
+//   constructor(name, phone, subject) {
+//     super(name, phone);
+//     this.subject = subject;
+//     this.teach = function () {
+//       console.log(`Я викладаю предмет ${this.subject}`);
+//     };
+//   }
+// }
+
+// const teacher = new Teacher("Михайло", 4543543543, "Математика");
+
+// teacher.introduce();
+// teacher.teach();
