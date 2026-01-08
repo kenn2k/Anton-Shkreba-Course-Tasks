@@ -296,3 +296,152 @@
 
 // teacher.introduce();
 // teacher.teach();
+
+//? ===================================================================================================================
+//? HOME TASK 3
+//? ===================================================================================================================
+
+/*
+! 1. Шаблони проєктування:
+! Реалізувати простий шаблон проєктування "Фабрика" (Factory), який створює об'єкти різних типів (наприклад, Car і Bike).
+! Ці об'єкти мають методи ride() та stop(), базовий клас повинен називатися Transport. 
+*/
+
+console.log("HOME TASK: FACTORY PATTERN");
+
+class Transport {
+  constructor(brand) {
+    this.brand = brand;
+  }
+
+  stop() {
+    console.log(`Transport has stopped`);
+  }
+
+  static createTransport(type, brand) {
+    if (type === "car") {
+      return new Car(brand);
+    }
+    if (type === "bike") {
+      return new Bike(brand);
+    } else {
+      throw new Error("Unknown transport type");
+    }
+  }
+}
+
+class Car extends Transport {
+  ride() {
+    console.log(`Car ${this.brand} is riding`);
+  }
+}
+
+class Bike extends Transport {
+  ride() {
+    console.log(`Bike ${this.brand} is riding`);
+  }
+}
+
+const myCar = Transport.createTransport("car", "Tesla");
+myCar.ride();
+myCar.stop();
+
+const myBike = Transport.createTransport("bike", "Cannondale");
+myBike.ride();
+myBike.stop();
+
+/*
+! 2. Робота з DOM:
+! Написати додаток, який реалізує відображення списку персонажів з Rick & Morty API і зробити просту пагінацію.
+! Список отримуємо за допомогою fetch за адресою: https://rickandmortyapi.com/api/character
+
+! Пагінація реалізується двома кнопками Next і Prev. Якщо ми дійшли до першого або останнього запису, відповідна кнопка блокується:
+! javascript
+! Копировать код
+! addMessageButton.disabled = true; // Заблокувати кнопку
+
+! Посередині відображається номер поточної сторінки. Він обчислюється зі значення поля data.info.next. Якщо це поле undefined, відображаємо data.info.pages (це остання сторінка).
+*/
+
+console.log("HOME TASK: WORKING WITH DOM");
+
+const url = "https://rickandmortyapi.com/api/character";
+
+const container = document.getElementById("characters");
+const loading = document.getElementById("loading");
+const nextBtn = document.getElementById("next");
+const prevBtn = document.getElementById("prev");
+const pageLabel = document.getElementById("page");
+
+let currentPage = 1;
+
+function loadPage(page) {
+  loading.style.display = "block";
+  container.innerHTML = "";
+
+  const response = fetch(`${url}?page=${page}`);
+
+  response
+    .then((data) => {
+      if (data.status !== 200) {
+        console.log("Error");
+      }
+      return data.json();
+    })
+    .then((data) => {
+      data.results.forEach((character) => {
+        const row = document.createElement("div");
+        row.className = "character-row";
+
+        const image = document.createElement("img");
+        image.src = character.image;
+        image.alt = character.name;
+        image.className = "character-image";
+
+        const info = document.createElement("div");
+        info.className = "character-info";
+
+        const name = document.createElement("p");
+        name.className = "character-name";
+        name.textContent = character.name;
+
+        const status = document.createElement("span");
+        status.className = `character-status status-${character.status.toLowerCase()}`;
+        status.textContent = character.status;
+
+        info.appendChild(name);
+        info.appendChild(status);
+        row.appendChild(image);
+        row.appendChild(info);
+        container.appendChild(row);
+      });
+
+      if (data.info.next) {
+        const nextUrl = new URL(data.info.next);
+        pageLabel.textContent = nextUrl.searchParams.get("page") - 1;
+      } else {
+        pageLabel.textContent = data.info.pages;
+      }
+
+      nextBtn.disabled = !data.info.next;
+      prevBtn.disabled = !data.info.prev;
+
+      currentPage = page;
+    })
+    .catch((error) => {
+      console.log("Error", error);
+    })
+    .finally(() => {
+      loading.style.display = "none";
+    });
+}
+
+nextBtn.addEventListener("click", () => {
+  loadPage(currentPage + 1);
+});
+
+prevBtn.addEventListener("click", () => {
+  loadPage(currentPage - 1);
+});
+
+loadPage(1);
