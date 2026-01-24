@@ -1,13 +1,24 @@
 import React, { useState } from "react";
-import { Wrapper } from "./Wrapper";
-import { Counter } from "./counter/Counter";
+import { AppRouter } from "./router/AppRouter";
+import { BrowserRouter } from "react-router";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { darkTheme, lightTheme } from "./theme/theme";
+import { ThemeContext } from "./theme/theme-context";
 
 const App = () => {
+  const [mode, setMode] = useState("light");
+
+  const theme = mode === "light" ? lightTheme : darkTheme;
+
   return (
-    <Wrapper>
-      <Counter defaultValue={0} />
-      <Counter defaultValue={5} />
-    </Wrapper>
+    <ThemeContext.Provider value={{ mode, setMode }}>
+      <BrowserRouter>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <AppRouter mode={mode} setMode={setMode} />
+        </ThemeProvider>
+      </BrowserRouter>
+    </ThemeContext.Provider>
   );
 };
 
