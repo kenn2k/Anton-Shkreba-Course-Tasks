@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Alert, Box, CircularProgress, Drawer } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 
 import { getHeroes } from "./api/fetchHeroes";
 import { useNavigate, useParams } from "react-router";
 import { HeroById } from "./HeroById";
+import { useRequest } from "ahooks";
 
 const columns = [
   { field: "id", headerName: "ID", width: 70 },
@@ -18,26 +19,10 @@ export const Heroes = () => {
   const { heroId } = useParams();
   const isDrawerOpen = Boolean(heroId);
 
-  const [heroes, setHeroes] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    async function fetchHeroesData() {
-      try {
-        const data = await getHeroes();
-        setHeroes(data);
-      } catch (err) {
-        setError("Failed fetching data");
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchHeroesData();
-  }, []);
+  const { data: heroes, loading, error } = useRequest(getHeroes);
 
   if (loading) return <CircularProgress />;
-  if (error) return <Alert severity="error">{error}</Alert>;
+  if (error) return <Alert severity="error">Failed fetching data</Alert>;
 
   return (
     <>

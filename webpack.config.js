@@ -19,6 +19,20 @@ export default (env, argv) => {
     module: {
       rules: [
         {
+          test: /\.(ts|tsx)$/,
+          exclude: /node_modules/,
+          use: {
+            loader: "babel-loader",
+            options: {
+              presets: [
+                "@babel/preset-env",
+                "@babel/preset-react",
+                "@babel/preset-typescript",
+              ],
+            },
+          },
+        },
+        {
           test: /\.(js|jsx)$/,
           exclude: /node_modules/,
           use: {
@@ -40,7 +54,7 @@ export default (env, argv) => {
     },
 
     resolve: {
-      extensions: [".js", ".jsx"],
+      extensions: [".js", ".jsx", ".ts", ".tsx"],
     },
     plugins: [
       new HtmlWebpackPlugin({

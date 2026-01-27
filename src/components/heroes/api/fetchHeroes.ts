@@ -9,17 +9,7 @@ export async function getHeroes() {
   return data.results;
 }
 
-/*
-   I tried to get data about the hero by ID, but faced some interesting behavior:
-   Some characters were displayed, while others threw a “Failed fetching data” error from Heroes.jsx
-   The problem is "Access to fetch has been blocked by CORS"
-
-   As i understand, public APIs do not always return headers
-
-   UPD: After disabling cache in DevTools, fetching by ID worked fine.
-*/
-
-export async function getHeroById(id) {
+export async function getHeroById(id: string) {
   const response = await fetch(`${BASE_URL}/${id}`);
   if (!response.ok) {
     throw new Error("Failed to fetch hero");

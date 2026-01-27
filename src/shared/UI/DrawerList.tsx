@@ -19,6 +19,10 @@ const navLinks = [
 export const DrawerList = () => {
   const { mode, setMode } = useThemeMode();
 
+  const toggleMode = () => {
+    setMode((prev) => (prev === "light" ? "dark" : "light"));
+  };
+
   return (
     <Box
       sx={{
@@ -48,13 +52,7 @@ export const DrawerList = () => {
       </List>
 
       <Box sx={{ p: 2 }}>
-        <Button
-          fullWidth
-          variant="contained"
-          onClick={() =>
-            setMode((prev) => (prev === "light" ? "dark" : "light"))
-          }
-        >
+        <Button fullWidth variant="contained" onClick={toggleMode}>
           {mode === "light" ? "Night" : "Light"}
         </Button>
       </Box>

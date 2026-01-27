@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { AppRouter } from "./router/AppRouter";
+import React from "react";
 import { BrowserRouter } from "react-router";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { darkTheme, lightTheme } from "./theme/theme";
-import { ThemeContext } from "./theme/theme-context";
-
+import { ThemeContext, ThemeMode } from "./theme/theme-context";
+import { useState } from "react";
+import { AppRouter } from "./router/AppRouter";
 const App = () => {
-  const [mode, setMode] = useState("light");
+  const [mode, setMode] = useState<ThemeMode>("light");
 
   const theme = mode === "light" ? lightTheme : darkTheme;
 
@@ -15,7 +15,7 @@ const App = () => {
       <BrowserRouter>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <AppRouter mode={mode} setMode={setMode} />
+          <AppRouter />
         </ThemeProvider>
       </BrowserRouter>
     </ThemeContext.Provider>
